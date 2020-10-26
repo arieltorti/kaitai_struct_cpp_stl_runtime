@@ -357,7 +357,7 @@ uint64_t kaitai::kstream::read_bits_int_le(int n) {
         char buf[8];
         m_io->read(buf, bytes_needed);
         for (int i = 0; i < bytes_needed; i++) {
-            uint8_t b = buf[i];
+            uint8_t b = uint8_t(buf[i]);
             m_bits |= (static_cast<uint64_t>(b) << m_bits_left);
             m_bits_left += 8;
         }
