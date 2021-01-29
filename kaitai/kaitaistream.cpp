@@ -438,7 +438,15 @@ std::string kaitai::kstream::read_bytes_term(char term, bool include, bool consu
 
 std::string kaitai::kstream::ensure_fixed_contents(std::string expected) {
     size_t len = expected.length();
-    if (len > std::numeric_limits<std::streamsize>::max()) {
+
+    // We need to do this because std::streamsize is actually signed for some reason.
+    // However, the only case were negative values are actually used is in the
+    // constructors of std::streambuf, so the cast should be safe. Moreover, there
+    // shouldn't be any narrowing since std::streamsize is a counterpart to size_t
+    // (like POSIX ssize_t).
+    static constexpr auto max = static_cast<size_t>(std::numeric_limits<std::streamsize>::max());
+
+    if (len > max) {
         throw std::runtime_error("ensure_fixed_contents: string is too large");
     }
 
