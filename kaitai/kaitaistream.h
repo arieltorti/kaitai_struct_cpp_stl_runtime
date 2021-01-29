@@ -277,7 +277,11 @@ template <class From>
 inline auto to_signed(From from) {
     using signed_F = typename std::make_signed<From>::type;
 
-    if (from <= std::numeric_limits<signed_F>::max()) {
+    // This cast is safe because From can be assumed to be unsigned, and max() should never be negative.
+    // If From is signed for some reason, we'd just be casting a From to itself.
+    constexpr auto max = static_cast<From>(std::numeric_limits<signed_F>::max());
+
+    if (from <= max) {
         return static_cast<signed_F>(from);
     }
 
