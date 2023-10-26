@@ -491,7 +491,7 @@ std::string kaitai::kstream::process_xor_one(std::string data, uint8_t key) {
     std::string result(len, ' ');
 
     for (size_t i = 0; i < len; i++)
-        result[i] = data[i] ^ key;
+        result[i] = data[i] ^ static_cast<char>(key);
 
     return result;
 }
